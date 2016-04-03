@@ -14,20 +14,25 @@ var PhaserGame = function() {
 PhaserGame.prototype = {
     
     preload: function () {
+        
+        // Load the gamepad spritesheet
+        this.load.spritesheet('gamepad', 
+            'assets/gamepad/gamepad_spritesheet.png', 100, 100);
+        
         this.load.image('ship', 'assets/ship.png');
-        this.load.image('button', 'assets/button_up.png');
     },
     
     create: function () {
         
-        // Add spaceship to the world
-        this.player = this.add.sprite(200, 200, 'ship');
+        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+		this.scale.pageAlignHorizontally = true;
+		this.scale.pageAlignVertically = true;
+        
+        this.player = this.add.sprite(250, 250, 'ship');
         //this.player.body.collideWorldBounds =  true;
         
-        // Enable the gamepad plugin
         this.gamepad = this.game.plugins.add(Phaser.Plugin.VirtualGamepad);
     },
 };
 
-// Add the only state and start the game
 game.state.add('Game', PhaserGame, true);

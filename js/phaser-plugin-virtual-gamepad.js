@@ -32,14 +32,28 @@
         
         this.input = this.game.input;
         
-        // Add the joystick and button images
+        this.joystick = this.game.add.sprite(100, 400, 'gamepad');
+        this.joystick.frame = 2;
+        this.joystick.anchor.set(0.5);
+        this.joystick.fixedToCamera = true;
+        
+        this.joystickPad = this.game.add.sprite(100, 400, 'gamepad');
+        this.joystickPad.frame = 3;
+        this.joystickPad.anchor.set(0.5);
+        this.joystickPad.fixedToCamera = true;
         
         /*this.game.load.spritesheet('button', 
             'assets/button_spritesheet.png', 100, 100);*/
-        this.button = this.game.add.button(400, 400, 'button');
+        this.button = this.game.add.button(400, 400, 'gamepad', null, 
+            this, 1, 0, 1, 0);
         this.button.anchor.set(0.5);
         this.button.fixedToCamera = true;
+        this.button.scale.setTo(1, 1);
     };
+    
+    /**
+     * Add a button to the screen
+     */
     
     //Extends the Phaser.Plugin template, setting up values we need
 	Phaser.Plugin.VirtualGamepad.prototype = 
