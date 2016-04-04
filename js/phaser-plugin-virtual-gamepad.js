@@ -89,6 +89,7 @@
         
         // Set up initial joystick properties
         this.joystick.properties = {
+            inUse: false,
             up: false,
             down: false,
             left: false,
@@ -160,32 +161,45 @@
         this.button.isDown = false;
         this.button.frame = 0;
         this.game.input.pointers.forEach(function(p) {
-            
-            // See if the pointer is over the joystick
-            var d = this.joystickPoint.distance(p.position);
-            if ((p.isDown) && (d < this.joystickRadius)) {
-                resetJoystick = false;
-                this.joystickPointer = p;
-                moveJoystick(p.position, this);
-            }
-            
-            // See if the pointer is over the button
-            d = this.buttonPoint.distance(p.position);
-            if ((p.isDown) && (d < this.buttonRadius)) {
-                this.button.isDown = true;
-                this.button.frame = 1;
-            }
+            resetJoystick = testDistance(p, this);
         }, this);
+        
+        // See if the mouse pointer is in range of the joystick or buttons
+        resetJoystick = testDistance(this.game.input.mousePointer, this);
         
         // If there 
         if (resetJoystick) {
             if ((this.joystickPointer === null) || 
                 (this.joystickPointer.isUp)) {
                 moveJoystick(this.joystickPoint, this);
+                this.joystick.properties.inUse = false;
                 this.joystickPointer = null;
             }
         }
         
+    };
+    
+    var testDistance = function(pointer, that) {
+    
+        var reset = true;
+    
+        // See if the pointer is over the joystick
+        var d = that.joystickPoint.distance(pointer.position);
+        if ((pointer.isDown) && (d < that.joystickRadius)) {
+            reset = false;
+            that.joystick.properties.inUse = true;
+            that.joystickPointer = pointer;
+            moveJoystick(pointer.position, that);
+        }
+        
+        // See if the pointer is over the button
+        d = that.buttonPoint.distance(pointer.position);
+        if ((pointer.isDown) && (d < that.buttonRadius)) {
+            that.button.isDown = true;
+            that.button.frame = 1;
+        }
+        
+        return reset;
     };
     
     var moveJoystick = function(point, that) {
