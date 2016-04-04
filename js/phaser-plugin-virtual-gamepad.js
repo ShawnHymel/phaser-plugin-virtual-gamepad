@@ -38,6 +38,7 @@
         this.joystickPad = null;
         this.joystickPoint = null;
         this.joystickRadius = null;
+        this.joystickPointer = null;
         this.button = null;
         this.buttonPoint = null;
         this.buttonRadius = null;
@@ -71,7 +72,7 @@
             return null;
         }
         
-        // Add thejoystick to the game
+        // Add the joystick to the game
         this.joystick = this.game.add.sprite(x, y, 'gamepad');
         this.joystick.frame = 2;
         this.joystick.anchor.set(0.5);
@@ -86,15 +87,18 @@
         // Remember the coordinates of the joystick
         this.joystickPoint = new Phaser.Point(x, y);
         
-        // Set up initial joystick states
-        this.joystick.isUp = false;
-        this.joystick.isDown = false;
-        this.joystick.isLeft = false;
-        this.joystick.isRight = false;
-        this.joystick.positionX = 0;
-        this.joystick.positionY = 0;
-        this.joystick.radius = 0;
-        this.joystick.angle = 0;
+        // Set up initial joystick properties
+        this.joystick.properties = {
+            up: false,
+            down: false,
+            left: false,
+            right: false,
+            x: 0,
+            y: 0,
+            distance: 0,
+            angle: 0,
+            rotation: 0
+        };
         
         // Set the touch area as defined by the button's radius
         this.joystickRadius = scale * (this.joystick.width / 2);
@@ -161,6 +165,7 @@
             var d = this.joystickPoint.distance(p.position);
             if ((p.isDown) && (d < this.joystickRadius)) {
                 resetJoystick = false;
+                this.joystickPointer = p;
                 moveJoystick(p.position, this);
             }
             
@@ -172,9 +177,13 @@
             }
         }, this);
         
-        // If there are no pointers on the joystick, reset italics
+        // If there 
         if (resetJoystick) {
-            moveJoystick(this.joystickPoint, this);
+            if ((this.joystickPointer === null) || 
+                (this.joystickPointer.isUp)) {
+                moveJoystick(this.joystickPoint, this);
+                this.joystickPointer = null;
+            }
         }
         
     };
@@ -186,39 +195,41 @@
 		var deltaY = point.y - that.joystickPoint.y;
         
         // Normalize x/y
-        that.joystick.positionX = parseInt((deltaX / 
+        that.joystick.properties.x = parseInt((deltaX / 
             that.joystickRadius) * 100, 10);
-		that.joystick.positionY = parseInt((deltaY  /
+		that.joystick.properties.y = parseInt((deltaY  /
             that.joystickRadius) * 100, 10);
 
-        // Get the angle of the pointer on the joystick
-        var angle = that.joystickPoint.angle(point);
+        // Get the angle (radians) of the pointer on the joystick
+        var rotation = that.joystickPoint.angle(point);
         
         // Set polar coordinates
-        that.joystick.angle = angle;
-        that.joystick.radius = parseInt((that.joystickPoint.distance(point) / 
+        that.joystick.properties.rotation = rotation;
+        that.joystick.properties.angle = (180 / Math.PI) * rotation;
+        that.joystick.properties.distance = 
+            parseInt((that.joystickPoint.distance(point) / 
             that.joystickRadius) * 100, 10);
             
         // Set d-pad directions
-        that.joystick.isUp = ((angle > UP_LOWER_BOUND) && 
-            (angle <= UP_UPPER_BOUND));
-        that.joystick.isDown = ((angle > DOWN_LOWER_BOUND) && 
-            (angle <= DOWN_UPPER_BOUND));
-        that.joystick.isRight = ((angle > RIGHT_LOWER_BOUND) && 
-            (angle <= RIGHT_UPPER_BOUND));
-        that.joystick.isLeft = ((angle > LEFT_LOWER_BOUND) || 
-            (angle <= LEFT_UPPER_BOUND));
+        that.joystick.properties.up = ((rotation > UP_LOWER_BOUND) && 
+            (rotation <= UP_UPPER_BOUND));
+        that.joystick.properties.down = ((rotation > DOWN_LOWER_BOUND) && 
+            (rotation <= DOWN_UPPER_BOUND));
+        that.joystick.properties.right = ((rotation > RIGHT_LOWER_BOUND) && 
+            (rotation <= RIGHT_UPPER_BOUND));
+        that.joystick.properties.left = ((rotation > LEFT_LOWER_BOUND) || 
+            (rotation <= LEFT_UPPER_BOUND));
             
         // Fix situation where left/right is true if X/Y is centered
         if ((that.joystick.positionX === 0) && 
             (that.joystick.positionY === 0)) {
-            that.joystick.isRight = false;
-            that.joystick.isLeft = false;
+            that.joystick.properties.right = false;
+            that.joystick.properties.left = false;
         }
         
         // Move joystick pad images
-        //that.joystickPad.x = that.joystick.positionX;
-        //that.joystickPad.y = that.joystick.positionY;
+        that.joystickPad.cameraOffset.x = that.joystickPoint.x + deltaX;
+        that.joystickPad.cameraOffset.y = that.joystickPoint.y + deltaY;
     };
     
 } (Phaser));
