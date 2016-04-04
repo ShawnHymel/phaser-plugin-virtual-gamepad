@@ -15,7 +15,8 @@ PhaserGame.prototype = {
     
     preload: function() {
         
-        // Load the gamepad spritesheet
+        // Load the gamepad spritesheet. Note that the width must equal height
+        // of the sprite.
         this.load.spritesheet('gamepad', 
             'assets/gamepad/gamepad_spritesheet.png', 100, 100);
         
@@ -38,10 +39,16 @@ PhaserGame.prototype = {
                      stroke: '#000000', 
                      strokeThickness: 6};
          
+        this.directionText = this.add.text(20, 20, '', style);
+        this.rectangularText = this.add.text(140, 20, '', style);
+        this.polarText = this.add.text(260, 20, '', style);
         this.buttonText = this.add.text(380, 20, '', style);
         
         // Add the VirtualGamepad plugin to the game
         this.gamepad = this.game.plugins.add(Phaser.Plugin.VirtualGamepad);
+        
+        // Add a joystick to the game
+        this.joystick = this.gamepad.addJoystick(100, 400, 1.0, 'gamepad');
         
         // Add a button to the game
         this.fireButton = this.gamepad.addButton(400, 400, 1.0, 'gamepad');
@@ -57,6 +64,14 @@ PhaserGame.prototype = {
     },
     
     updateDebugText: function() {
+        this.directionText.setText("Direction:\n up: " + this.joystick.isUp + 
+            "\n down: " + this.joystick.isDown + 
+            "\n left: " + this.joystick.isLeft + 
+            "\n right: " + this.joystick.isRight);
+        this.rectangularText.setText("Rectangular:\n x: " + 
+            this.joystick.positionX + "\n y: " + this.joystick.positionY);
+        this.polarText.setText("Polar:\n radius: " + this.joystick.radius + 
+            "\n angle: " + this.joystick.angle);
         this.buttonText.setText("Button: " + this.fireButton.isDown);
     }
 };
