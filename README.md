@@ -18,7 +18,17 @@ How to Use
  * Add the plugin with `var gamepad = game.plugins.add(Phaser.Plugin.VirtualGamepad)`
  * Add a joystick with `var joystick = gamepad.addJoystick(x, y, scale, '<SPRITESHEET>')`
  * Add a button with `var button = this.gamepad.addButton(x, y, scale, '<SPRITESHEET>')`
- * Joystick properties can be read with `joystick.properties.<PROPERTY>`
+ * Joystick properties can be read with `joystick.properties.<PROPERTY>`. Properties include:
+  * inUse
+  * up
+  * down
+  * left
+  * right
+  * x
+  * y
+  * distance
+  * angle
+  * rotation
  * Button state can be read with `button.isDown`
  
 See code in *js/start.js* as an example on how to use the VirtualGamepad.
