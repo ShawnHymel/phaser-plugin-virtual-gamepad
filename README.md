@@ -41,6 +41,7 @@ A playable demo of this repository can be found at [http://shawnhymel.github.io/
 Version History
 ---------------
 
+ * v0.1.1 - Fixed direction bug (.right stuck) on joystick. Added credits to Eugenio Fage in comments.
  * v0.1.0 - Initial release
 
 Known Bugs

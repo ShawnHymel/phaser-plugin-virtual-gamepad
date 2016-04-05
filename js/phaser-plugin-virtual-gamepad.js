@@ -5,6 +5,10 @@
  * @license     {@link http://opensource.org/licenses/MIT}
  * @version     0.1.0
  *
+ * Joystick math is based on work by Eugenio Fage, whose original touch control
+ * plugin can be found at: 
+ * https://github.com/Gamegur-us/phaser-touch-control-plugin
+ *
  * The MIT License (MIT)
  * Copyright (c) 2016 Shawn Hymel
  * 
@@ -265,8 +269,8 @@
             (rotation <= LEFT_UPPER_BOUND));
             
         // Fix situation where left/right is true if X/Y is centered
-        if ((that.joystick.positionX === 0) && 
-            (that.joystick.positionY === 0)) {
+        if ((that.joystick.properties.x === 0) && 
+            (that.joystick.properties.y === 0)) {
             that.joystick.properties.right = false;
             that.joystick.properties.left = false;
         }
