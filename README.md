@@ -16,8 +16,8 @@ How to Use
 
  * In your game, load `gamepad_spritesheet.png` as part of your preload
  * Add the plugin with `var gamepad = game.plugins.add(Phaser.Plugin.VirtualGamepad)`
- * Add a joystick with `var joystick = gamepad.addJoystick(x, y, scale, '<SPRITESHEET>');
- * Add a button with `var button = this.gamepad.addButton(x, y, scale, '<SPRITESHEET>');
+ * Add a joystick with `var joystick = gamepad.addJoystick(x, y, scale, '<SPRITESHEET>')`
+ * Add a button with `var button = this.gamepad.addButton(x, y, scale, '<SPRITESHEET>')`
  * Joystick properties can be read with `joystick.properties.<PROPERTY>`
  * Button state can be read with `button.isDown`
  
