@@ -4,6 +4,27 @@
  * @copyright   2016 Shawn Hymel
  * @license     {@link http://opensource.org/licenses/MIT}
  * @version     0.1.0
+ *
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Shawn Hymel
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights 
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+ * copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 (function (Phaser) {
@@ -167,7 +188,7 @@
         // See if the mouse pointer is in range of the joystick or buttons
         resetJoystick = testDistance(this.game.input.mousePointer, this);
         
-        // If there 
+        // If the pointer is removed, reset the joystick
         if (resetJoystick) {
             if ((this.joystickPointer === null) || 
                 (this.joystickPointer.isUp)) {
@@ -185,7 +206,8 @@
     
         // See if the pointer is over the joystick
         var d = that.joystickPoint.distance(pointer.position);
-        if ((pointer.isDown) && (d < that.joystickRadius)) {
+        if ((pointer.isDown) && ((pointer === that.joystickPointer) || 
+            (d < that.joystickRadius))) {
             reset = false;
             that.joystick.properties.inUse = true;
             that.joystickPointer = pointer;
@@ -208,14 +230,22 @@
         var deltaX = point.x - that.joystickPoint.x;
 		var deltaY = point.y - that.joystickPoint.y;
         
+        // Get the angle (radians) of the pointer on the joystick
+        var rotation = that.joystickPoint.angle(point);
+        
+        // Set bounds on joystick pad
+        if (that.joystickPoint.distance(point) > that.joystickRadius) {
+            deltaX = (deltaX === 0) ? 
+                0 : Math.cos(rotation) * that.joystickRadius;
+            deltaY = (deltaY === 0) ?
+                0 : Math.sin(rotation) * that.joystickRadius;
+        }
+        
         // Normalize x/y
         that.joystick.properties.x = parseInt((deltaX / 
             that.joystickRadius) * 100, 10);
 		that.joystick.properties.y = parseInt((deltaY  /
             that.joystickRadius) * 100, 10);
-
-        // Get the angle (radians) of the pointer on the joystick
-        var rotation = that.joystickPoint.angle(point);
         
         // Set polar coordinates
         that.joystick.properties.rotation = rotation;
