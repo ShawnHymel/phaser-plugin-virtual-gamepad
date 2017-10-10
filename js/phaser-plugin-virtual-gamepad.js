@@ -98,12 +98,12 @@
         }
         
         // Add the joystick to the game
-        this.joystick = this.game.add.sprite(x, y, 'gamepad');
+        this.joystick = this.game.add.sprite(x, y, key);
         this.joystick.frame = 2;
         this.joystick.anchor.set(0.5);
         this.joystick.fixedToCamera = true;
         this.joystick.scale.setTo(scale, scale);
-        this.joystickPad = this.game.add.sprite(x, y, 'gamepad');
+        this.joystickPad = this.game.add.sprite(x, y, key);
         this.joystickPad.frame = 3;
         this.joystickPad.anchor.set(0.5);
         this.joystickPad.fixedToCamera = true;
